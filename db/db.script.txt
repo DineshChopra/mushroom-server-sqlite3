@@ -1,0 +1,9 @@
+product
+{"name": "Bag"}
+
+customer
+{"name" : "Nivender", "mobileNo": "9916418885"}
+
+purchase
+{"productId" : "1", "quantity" : "10", "price": "10"}
+{ "id": 1, "productId": 1, "quantity": 10, "price": 10, "totalPrice": 100 }
