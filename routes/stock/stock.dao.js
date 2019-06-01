@@ -46,8 +46,8 @@ class StockDao {
         return this.dao.run(query, [quantity, id]);
     }
     delete(id) {
-        const query = `DELETE FROM ${this.tableName} WHERE id = ${id}`;
-        return this.dao.run(query);
+        const query = `DELETE FROM ${this.tableName} WHERE id = ?`;
+        return this.dao.run(query, [id]);
     }
 
 

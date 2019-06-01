@@ -46,10 +46,12 @@ class StockController {
     }
 
     updateStockQuantity(id, quantity) {
+        console.log('StockController : updateStockQuantity -- id, quantity', id, quantity);
         return this.dao.updateStockQuantity(id, quantity);
     }
 
     delete(id){
+        console.log('StockController : delete -- id ', id);
         return this.dao.delete(id);
     }
 }

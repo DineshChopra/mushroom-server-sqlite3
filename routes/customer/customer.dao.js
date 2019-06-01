@@ -16,6 +16,7 @@ class CustomerDao {
         return this.dao.run(sql).then(
             response => {
                 console.log('Customer table is created successfully');
+                this.create({"name" : "Nivender", "mobileNo": "9916418885"});
             },
             error => {
                 console.log(' ---- Customer table is not created successfully');
@@ -26,9 +27,9 @@ class CustomerDao {
 
     create(data) {
         const {name, mobileNo} = data;
-        return this.dao.run(
-          `INSERT INTO ${this.tableName} (name, mobileNo) VALUES (?, ?)`,
-          [name, mobileNo])
+        const query = `INSERT INTO ${this.tableName} (name, mobileNo) VALUES (?, ?)`;
+        const values = [name, mobileNo];
+        return this.dao.run(query, values);
     }
 
     getAll() {

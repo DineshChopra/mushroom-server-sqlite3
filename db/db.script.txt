@@ -1,3 +1,5 @@
+Note: Needs to remove default recod from customer and product
+
 product
 {"name": "Bag"}
 
@@ -7,4 +9,10 @@ customer
 purchase
 {"productId" : "1", "quantity" : "10", "price": "10"}
 { "id": 1, "productId": 1, "quantity": 10, "price": 10, "totalPrice": 100 }
+
 Stock
+{ "id": 1, "productId": 1, "quantity": 10, "price": 10, "totalPrice": 100 }
+
+
+sale -- 
+{"customerId": 1, "productId" : 1, "quantity": 10, "price": 12}

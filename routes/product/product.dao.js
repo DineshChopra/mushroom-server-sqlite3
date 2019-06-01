@@ -15,6 +15,7 @@ class ProductDao {
         return this.dao.run(sql).then(
             response => {
                 console.log('Product table is created successfully');
+                this.create({name: 'Bag'});
             },
             error => {
                 console.log(' ---- Product table is not created successfully');
@@ -25,9 +26,8 @@ class ProductDao {
 
     create(data) {
         const {name} = data;
-        return this.dao.run(
-          `INSERT INTO ${this.tableName} (name) VALUES (?)`,
-          [name])
+        const query = `INSERT INTO ${this.tableName} (name) VALUES (?)`;
+        return this.dao.run(query, [name]);
     }
 
     getAll() {

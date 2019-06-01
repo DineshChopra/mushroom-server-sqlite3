@@ -31,11 +31,11 @@ class SaleDao {
     }
 
     create(data) {
+        console.log('SaleDao : create request , data', data);
         const {customerId, productId, quantity, price, profit} = data;
         const totalSalePrice = quantity * price;
         // const {productId} = data;
-        const stocks = this.getStockBasedOnProductId(productId);
-        const query = `INSERT INTO ${this.tableName} (customerId, productId, quantity, price, totalSalePrice, profit) VALUES (?, ?, ?, ?)`;
+        const query = `INSERT INTO ${this.tableName} (customerId, productId, quantity, price, totalSalePrice, profit) VALUES (?, ?, ?, ?, ?, ? )`;
         const values = [customerId, productId, quantity, price, totalSalePrice, profit];
         return this.dao.run(query, values);
     }

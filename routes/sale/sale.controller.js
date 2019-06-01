@@ -10,7 +10,6 @@ class SaleController {
     getAll(req, res, next) {
         this.dao.getAll().then(
             response => {
-                console.log('get all Sale record -- ', response);
                 const responseObj = {data: response}
                 res.status(200).json(responseObj);
             }
@@ -20,9 +19,9 @@ class SaleController {
     async create(req, res, next) {
         console.log(' --- ',req.body);
         const {customerId, productId, quantity, price} = req.body;
-        const totalSalePrice = quantity * price;
         const saleData = {customerId, productId, quantity, price};
-        const stocks = await this.getStockBasedOnProductId(productId);
+        const stockResponse = await this.getStockBasedOnProductId(productId);
+        const stocks = stockResponse.data;
         console.log('SaleController.create : stocks ', stocks);
         const profit = await this.getProfit(stocks, saleData);
         console.log('SaleController.create : profit ', profit);
@@ -56,27 +55,34 @@ class SaleController {
             "totalPrice": 100
         }
     */
-    getProfit(stocks, saleData) {
+    async getProfit(stocks, saleData) {
         let profit = 0;
-        const saleQuantity = saleData.quantity;
+        let saleQuantity = saleData.quantity;
         const salePrice = saleData.price;
         for(const stock of stocks) {
             const stockQuantity = stock.quantity;
             const stockPrice = stock.price;
             const id = stock.id;
-            if(stockQuantity >= saleQuantity) {
+            if(stockQuantity > saleQuantity) {
                 const restQuantity = stockQuantity - saleQuantity;
-                const currentProfit = saleQuantity * salePrice - saleQuantity * stockPrice;
-                profit += currentProfit;
-                // update stock table
-                this.stockController.updateStockQuantity(id, restQuantity);
-                break;
-            } else {
-                const quantity = saleQuantity - stockQuantity;
+                const quantity = saleQuantity;
                 const currentProfit = quantity * salePrice - quantity * stockPrice;
                 profit += currentProfit;
+                console.log(`quantity : ${quantity}, profit : ${currentProfit}`);
+                // update stock table
+                await this.stockController.updateStockQuantity(id, restQuantity);
+                break;
+            } else {
+                const quantity = stockQuantity;
+                const currentProfit = quantity * salePrice - quantity * stockPrice;
+                console.log(`quantity : ${quantity}, profit : ${currentProfit}`);
+                profit += currentProfit;
                 // Delete stock from stock table
-                this.stockController.delete(id);
+                await this.stockController.delete(id);
+                saleQuantity -= stockQuantity;
+                if(saleQuantity == 0) {
+                    break;
+                }
             }
         }
         return profit;
