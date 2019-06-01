@@ -24,8 +24,6 @@ class StockController {
         this.dao.create(stockData).then(
             (response) => {
                 console.log('stock data is inserted successfully', response);
-                const responseObj = {message: 'stock record created '}
-                res.status(200).json(responseObj);
             },
             error => {
                 console.log('----- stock data is not inserted', error);
@@ -45,6 +43,14 @@ class StockController {
                 console.log('----- stock data is not reccieved', error);
             }
         );
+    }
+
+    updateStockQuantity(id, quantity) {
+        return this.dao.updateStockQuantity(id, quantity);
+    }
+
+    delete(id){
+        return this.dao.delete(id);
     }
 }
 module.exports = StockController;

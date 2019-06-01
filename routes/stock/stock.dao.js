@@ -39,6 +39,16 @@ class StockDao {
     getAllBasedOnProductId(productId) {
         return this.dao.all(`SELECT * FROM ${this.tableName} where productId = ?`, [productId])
     }
+    updateStockQuantity(id, quantity) {
+        const query = `UPDATE ${this.tableName}
+                        SET quantity = ?
+                        WHERE id=?`;
+        return this.dao.run(query, [quantity, id]);
+    }
+    delete(id) {
+        const query = `DELETE FROM ${this.tableName} WHERE id = ${id}`;
+        return this.dao.run(query);
+    }
 
 
 }

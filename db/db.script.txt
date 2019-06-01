@@ -7,3 +7,4 @@ customer
 purchase
 {"productId" : "1", "quantity" : "10", "price": "10"}
 { "id": 1, "productId": 1, "quantity": 10, "price": 10, "totalPrice": 100 }
+Stock

@@ -16,7 +16,8 @@ class SaleDao {
         customerId INTEGER,
         productId INTEGER,
         quantity INTEGER,
-        salePrice INTEGER,
+        price INTEGER,
+        totalSalePrice INTEGER,
         profit INTEGER)`;
         return this.dao.run(sql).then(
             response => {
@@ -29,14 +30,14 @@ class SaleDao {
         );
     }
 
-    async create(data) {
-        const {productId, quantity, price, customerId} = data;
-        const totalPrice = quantity * price;
+    create(data) {
+        const {customerId, productId, quantity, price, profit} = data;
+        const totalSalePrice = quantity * price;
         // const {productId} = data;
-        const stocks = await this.getStockBasedOnProductId(productId);
-        return this.dao.run(
-          `INSERT INTO ${this.tableName} (productId, quantity, price, totalPrice) VALUES (?, ?, ?, ?)`,
-          [productId, quantity, price, totalPrice])
+        const stocks = this.getStockBasedOnProductId(productId);
+        const query = `INSERT INTO ${this.tableName} (customerId, productId, quantity, price, totalSalePrice, profit) VALUES (?, ?, ?, ?)`;
+        const values = [customerId, productId, quantity, price, totalSalePrice, profit];
+        return this.dao.run(query, values);
     }
 
     getAll() {

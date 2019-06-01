@@ -19,12 +19,13 @@ class PurchaseController {
         
     }
 
-    create(req, res, next) {
-        console.log(' --- ',req.body);
+    async create(req, res, next) {
+        console.log(' -=- ',req.body);
         const {productId, quantity, price} = req.body;
         const totalPrice = quantity * price;
         const purchaseData = {productId, quantity, price, totalPrice};
-        this.createStock(purchaseData);
+        const stockReq = {body: purchaseData}
+        await this.createStock(stockReq);
         this.dao.create(purchaseData).then(
             (response) => {
                 console.log('Purchase data is inserted successfully', response);
@@ -37,10 +38,7 @@ class PurchaseController {
         );
     }
     createStock(data) {
-        this.stockController.create(data).then(
-            (response) => console.log('Stock created successfully'),
-            (error) => console.log('=== Stock creation error', error)
-        );
+        this.stockController.create(data);
     }
 }
 module.exports = PurchaseController;
