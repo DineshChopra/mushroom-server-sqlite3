@@ -6,6 +6,7 @@ const purchaseRoute = require('./routes/purchase/purchase.route');
 const stockRoute = require('./routes/stock/stock.route');
 const saleRoute = require('./routes/sale/sale.route');
 const customerRoute = require('./routes/customer/customer.route');
+const testRoute = require('./routes/test/test.route');
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -26,5 +27,6 @@ app.use('/api/customer/', customerRoute);
 app.use('/api/purchase/', purchaseRoute);
 app.use('/api/stock/', stockRoute);
 app.use('/api/sale/', saleRoute);
+app.use('/api/test/', testRoute);
 
 module.exports = app;

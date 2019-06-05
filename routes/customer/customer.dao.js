@@ -11,7 +11,8 @@ class CustomerDao {
         CREATE TABLE IF NOT EXISTS ${this.tableName} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name STRING,
-        mobileNo STRING)`;
+        mobileNo STRING,
+        registerDate TEXT)`;
 
         return this.dao.run(sql).then(
             response => {
@@ -27,7 +28,8 @@ class CustomerDao {
 
     create(data) {
         const {name, mobileNo} = data;
-        const query = `INSERT INTO ${this.tableName} (name, mobileNo) VALUES (?, ?)`;
+        const query = `INSERT INTO ${this.tableName} (name, mobileNo, registerDate) 
+                        VALUES (?, ?, datetime())`;
         const values = [name, mobileNo];
         return this.dao.run(query, values);
     }

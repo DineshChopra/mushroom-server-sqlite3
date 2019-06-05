@@ -13,7 +13,8 @@ class StockDao {
         productId INTEGER,
         quantity INTEGER,
         price INTEGER,
-        totalPrice INTEGER)`
+        totalPrice INTEGER,
+        purchaseDate TEXT)`
         return this.dao.run(sql).then(
             response => {
                 console.log('Stock table is created successfully');
@@ -28,7 +29,7 @@ class StockDao {
     create(data) {
         const {productId, quantity, price, totalPrice} = data;
         return this.dao.run(
-          `INSERT INTO ${this.tableName} (productId, quantity, price, totalPrice) VALUES (?, ?, ?, ?)`,
+          `INSERT INTO ${this.tableName} (productId, quantity, price, totalPrice, purchaseDate) VALUES (?, ?, ?, ?, datetime())`,
           [productId, quantity, price, totalPrice])
     }
 

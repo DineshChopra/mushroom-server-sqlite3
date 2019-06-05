@@ -10,7 +10,8 @@ class ProductDao {
         const sql = `
         CREATE TABLE IF NOT EXISTS ${this.tableName} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name STRING)`;
+        name STRING,
+        registerDate TEXT)`;
 
         return this.dao.run(sql).then(
             response => {
@@ -26,7 +27,7 @@ class ProductDao {
 
     create(data) {
         const {name} = data;
-        const query = `INSERT INTO ${this.tableName} (name) VALUES (?)`;
+        const query = `INSERT INTO ${this.tableName} (name, registerDate) VALUES (?, datetime())`;
         return this.dao.run(query, [name]);
     }
 
