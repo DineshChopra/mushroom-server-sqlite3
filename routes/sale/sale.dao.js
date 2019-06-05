@@ -41,8 +41,33 @@ class SaleDao {
         return this.dao.run(query, values);
     }
 
-    getAll() {
-        return this.dao.all(`SELECT * FROM ${this.tableName}`)
+    getAll(queryParams) {
+        const condition = this.getCondition(queryParams);
+        console.log(' ----  getAll condition ---- ', condition);
+        return this.dao.all(`SELECT * FROM ${this.tableName}  ${condition}`);
+    }
+
+    getCondition(queryParams = {}) {
+        const keys = Object.keys(queryParams);
+        const condition = [];
+        if(keys.length === 0 ) {
+            return '';
+        }
+        if( keys.indexOf('customerId') >= 0 ) {
+            condition.push( `customerId = ${queryParams['customerId']}`);
+        }
+        if( keys.indexOf('productId') >= 0 ) {
+            condition.push( `productId = ${queryParams['productId']}`);
+        }
+        if( keys.indexOf('startDate') >= 0 ) {
+            condition.push( `saleDate >= ${queryParams['startDate']}`);
+        }
+        if( keys.indexOf('endDate') >= 0 ) {
+            condition.push( `saleDate <= ${queryParams['endDate']}`);
+        }
+
+        const conditionString = ' where ' + condition.join(' and ');
+        return conditionString;
     }
 
     

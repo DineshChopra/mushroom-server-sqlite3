@@ -8,7 +8,9 @@ class SaleController {
     }
 
     getAll(req, res, next) {
-        this.dao.getAll().then(
+        const queryParams = req.query;
+        console.log('---====---- queryParams : ', queryParams);
+        this.dao.getAll(queryParams).then(
             response => {
                 const responseObj = {data: response}
                 res.status(200).json(responseObj);
