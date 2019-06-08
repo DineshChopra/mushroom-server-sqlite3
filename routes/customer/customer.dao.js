@@ -12,12 +12,13 @@ class CustomerDao {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name STRING,
         mobileNo STRING,
+        address STRING,
         registerDate TEXT)`;
 
         return this.dao.run(sql).then(
             response => {
                 console.log('Customer table is created successfully');
-                this.create({"name" : "Nivender", "mobileNo": "9916418885"});
+                // this.create({"name" : "Nivender", "mobileNo": "9916418885"});
             },
             error => {
                 console.log(' ---- Customer table is not created successfully');
@@ -27,10 +28,10 @@ class CustomerDao {
     }
 
     create(data) {
-        const {name, mobileNo} = data;
-        const query = `INSERT INTO ${this.tableName} (name, mobileNo, registerDate) 
-                        VALUES (?, ?, datetime())`;
-        const values = [name, mobileNo];
+        const {name, mobileNo, address} = data;
+        const query = `INSERT INTO ${this.tableName} (name, mobileNo, address, registerDate) 
+                        VALUES (?, ?, ?, datetime())`;
+        const values = [name, mobileNo, address];
         return this.dao.run(query, values);
     }
 

@@ -18,8 +18,8 @@ class ProductController {
 
     create(req, res, next) {
         console.log(' --- ',req.body);
-        const {name} = req.body;
-        const productData = {name};
+        const {name, desc} = req.body;
+        const productData = {name, desc};
         this.dao.create(productData).then(
             (response) => {
                 console.log('Product data is inserted successfully', response);

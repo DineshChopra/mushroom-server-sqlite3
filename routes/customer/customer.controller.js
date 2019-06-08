@@ -18,8 +18,8 @@ class CustomerController {
 
     create(req, res, next) {
         console.log(' --- ',req.body);
-        const {name, mobileNo} = req.body;
-        const data = {name, mobileNo};
+        const {name, mobileNo, address} = req.body;
+        const data = {name, mobileNo, address};
         this.dao.create(data).then(
             (response) => {
                 console.log('Customer data is inserted successfully', response);
