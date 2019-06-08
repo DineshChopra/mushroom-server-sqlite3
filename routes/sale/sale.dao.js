@@ -44,7 +44,11 @@ class SaleDao {
     getAll(queryParams) {
         const condition = this.getCondition(queryParams);
         console.log(' ----  getAll condition ---- ', condition);
-        return this.dao.all(`SELECT * FROM ${this.tableName}  ${condition}`);
+        const query = `SELECT a.*, b.name as customerName, c.name as productName FROM ${this.tableName} as a
+                        left join customer as b on a.customerId = b.id 
+                        left join product as c on a.productId = c.id
+                        ${condition} `;
+        return this.dao.all(query);
     }
 
     getCondition(queryParams = {}) {
@@ -60,10 +64,10 @@ class SaleDao {
             condition.push( `productId = ${queryParams['productId']}`);
         }
         if( keys.indexOf('startDate') >= 0 ) {
-            condition.push( `saleDate >= ${queryParams['startDate']}`);
+            condition.push( `saleDate >= '${queryParams['startDate']}'`);
         }
         if( keys.indexOf('endDate') >= 0 ) {
-            condition.push( `saleDate <= ${queryParams['endDate']}`);
+            condition.push( `saleDate <= '${queryParams['endDate']}'`);
         }
 
         const conditionString = ' where ' + condition.join(' and ');
