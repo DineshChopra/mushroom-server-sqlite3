@@ -34,7 +34,7 @@ class PurchaseDao {
     }
 
     getAll() {
-        return this.dao.all(`SELECT * FROM ${this.tableName}`)
+        return this.dao.all(`SELECT a.*, b.name as productName FROM ${this.tableName} as a left join product as b on a.productId = b.id`)
     }
 }
 

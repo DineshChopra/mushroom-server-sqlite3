@@ -34,11 +34,14 @@ class StockDao {
     }
 
     getAll() {
-        return this.dao.all(`SELECT * FROM ${this.tableName}`)
+        return this.dao.all(`SELECT a.*, b.name as productName FROM ${this.tableName} as a left join product as b on a.productId = b.id`)
     }
     
     getAllBasedOnProductId(productId) {
-        return this.dao.all(`SELECT * FROM ${this.tableName} where productId = ?`, [productId])
+        const query = `SELECT a.*, b.name as productName FROM ${this.tableName} as a 
+                    left join product as b on a.productId = b.id 
+                    where productId = ?`;
+        return this.dao.all(query, [productId])
     }
     updateStockQuantity(id, quantity) {
         const query = `UPDATE ${this.tableName}
