@@ -16,7 +16,8 @@ class SaleDao {
         customerId INTEGER,
         productId INTEGER,
         quantity INTEGER,
-        price INTEGER,
+        totalPurchasePrice INTEGER,
+        salePrice INTEGER,
         totalSalePrice INTEGER,
         profit INTEGER,
         saleDate TEXT)`;
@@ -33,11 +34,11 @@ class SaleDao {
 
     create(data) {
         console.log('SaleDao : create request , data', data);
-        const {customerId, productId, quantity, price, profit} = data;
-        const totalSalePrice = quantity * price;
+        const {customerId, productId, quantity, totalPurchasePrice, salePrice, profit } = data;
+        const totalSalePrice = quantity * salePrice;
         // const {productId} = data;
-        const query = `INSERT INTO ${this.tableName} (customerId, productId, quantity, price, totalSalePrice, profit, saleDate) VALUES (?, ?, ?, ?, ?, ?, datetime() )`;
-        const values = [customerId, productId, quantity, price, totalSalePrice, profit];
+        const query = `INSERT INTO ${this.tableName} (customerId, productId, quantity, totalPurchasePrice, salePrice, totalSalePrice, profit, saleDate) VALUES (?, ?, ?, ?, ?, ?, ?, datetime() )`;
+        const values = [customerId, productId, quantity, totalPurchasePrice, salePrice, totalSalePrice, profit];
         return this.dao.run(query, values);
     }
 
@@ -48,6 +49,18 @@ class SaleDao {
                         left join customer as b on a.customerId = b.id 
                         left join product as c on a.productId = c.id
                         ${condition} `;
+        return this.dao.all(query);
+    }
+    getAllReport(queryParams) {
+        const condition = this.getCondition(queryParams);
+        console.log(' ----  getAll condition ---- ', condition);
+        const query = `SELECT sum(a.quantity) as quantity,
+                              sum(a.totalPurchasePrice) as totalPurchasePrice,
+                              sum(a.totalSalePrice) as totalSalePrice,
+                              sum(a.profit) as profit, b.name as customerName, c.name as productName FROM ${this.tableName} as a
+                        left join customer as b on a.customerId = b.id 
+                        left join product as c on a.productId = c.id
+                        ${condition} group by a.productId`;
         return this.dao.all(query);
     }
 

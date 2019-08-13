@@ -33,7 +33,7 @@ class StockDao {
     }
 
     getAll() {
-        return this.dao.all(`SELECT a.*, b.name as productName FROM ${this.tableName} as a left join product as b on a.productId = b.id`)
+        return this.dao.all(`SELECT a.*, sum(a.quantity) as quantity, b.name as productName FROM ${this.tableName} as a left join product as b on a.productId = b.id group by a.productId`)
     }
     
     getAllBasedOnProductId(productId) {

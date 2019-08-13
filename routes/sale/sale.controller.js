@@ -17,17 +17,29 @@ class SaleController {
             }
         );
     }
+    getAllReport(req, res, next) {
+        const queryParams = req.query;
+        console.log('---====---- queryParams : ', queryParams);
+        this.dao.getAllReport(queryParams).then(
+            response => {
+                const responseObj = {data: response}
+                res.status(200).json(responseObj);
+            }
+        );
+    }
 
     async create(req, res, next) {
         console.log(' --- ',req.body);
         const {customerId, productId, quantity, price} = req.body;
-        const saleData = {customerId, productId, quantity, price};
+        const saleData = {customerId, productId, quantity};
+        saleData.salePrice = price;
         const stockResponse = await this.getStockBasedOnProductId(productId);
         const stocks = stockResponse.data;
         console.log('SaleController.create : stocks ', stocks);
-        const profit = await this.getProfit(stocks, saleData);
-        console.log('SaleController.create : profit ', profit);
+        const {profit, totalPurchasePrice} = await this.getProfit(stocks, saleData);
+        console.log('SaleController.create : profit, totalPurchasePrice ', profit, totalPurchasePrice);
         saleData.profit = profit;
+        saleData.totalPurchasePrice = totalPurchasePrice;
         await this.dao.create(saleData).then(
             (response) => {
                 console.log('Sale data is inserted successfully', response);
@@ -58,9 +70,13 @@ class SaleController {
         }
     */
     async getProfit(stocks, saleData) {
+        console.log('Get Profit ---------');
+        console.log('Stocks -- ', stocks);
+        console.log('saleData == ', saleData);
         let profit = 0;
         let saleQuantity = saleData.quantity;
-        const salePrice = saleData.price;
+        const salePrice = saleData.salePrice;
+        let totalPurchasePrice = 0;
         for(const stock of stocks) {
             const stockQuantity = stock.quantity;
             const stockPrice = stock.price;
@@ -69,15 +85,17 @@ class SaleController {
                 const restQuantity = stockQuantity - saleQuantity;
                 const quantity = saleQuantity;
                 const currentProfit = quantity * salePrice - quantity * stockPrice;
+                totalPurchasePrice += quantity * stockPrice;
                 profit += currentProfit;
-                console.log(`quantity : ${quantity}, profit : ${currentProfit}`);
+                console.log(`Codition TRUE == quantity : ${quantity}, profit : ${currentProfit}`);
                 // update stock table
                 await this.stockController.updateStockQuantity(id, restQuantity);
                 break;
             } else {
                 const quantity = stockQuantity;
+                totalPurchasePrice += quantity * stockPrice;
                 const currentProfit = quantity * salePrice - quantity * stockPrice;
-                console.log(`quantity : ${quantity}, profit : ${currentProfit}`);
+                console.log(`== Condition False : quantity : ${quantity}, profit : ${currentProfit}`);
                 profit += currentProfit;
                 // Delete stock from stock table
                 await this.stockController.delete(id);
@@ -87,7 +105,8 @@ class SaleController {
                 }
             }
         }
-        return profit;
+        console.log(`profit: ${profit}, totalPurchasePrice: ${totalPurchasePrice}`);
+        return {profit, totalPurchasePrice};
     }
 }
 module.exports = SaleController;

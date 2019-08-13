@@ -7,6 +7,10 @@ const router = express.Router();
 router.get('', (req, res, next) => {
     return controller.getAll(req, res, next);
 });
+router.get('/report', (req, res, next) => {
+    console.log('Sale report is called ---------------');
+    return controller.getAllReport(req, res, next);
+});
 
 router.post('', (req, res, next) => {
     console.log(' ===  ', req.body);
