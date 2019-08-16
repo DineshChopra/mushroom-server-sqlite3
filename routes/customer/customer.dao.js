@@ -13,6 +13,7 @@ class CustomerDao {
         name STRING,
         mobileNo STRING,
         address STRING,
+        balance INTEGER,
         registerDate TEXT)`;
 
         return this.dao.run(sql).then(
@@ -29,14 +30,16 @@ class CustomerDao {
 
     create(data) {
         const {name, mobileNo, address} = data;
-        const query = `INSERT INTO ${this.tableName} (name, mobileNo, address, registerDate) 
-                        VALUES (?, ?, ?, datetime())`;
+        const query = `INSERT INTO ${this.tableName} (name, mobileNo, address, balance, registerDate) 
+                        VALUES (?, ?, ?, 0, datetime())`;
         const values = [name, mobileNo, address];
         return this.dao.run(query, values);
     }
 
     getAll() {
-        return this.dao.all(`SELECT * FROM ${this.tableName}`)
+        return this.dao.all(`select a.*, b.totalBalance from customer a left join
+        (select customerId, sum(balance) as totalBalance from sale group by customerId ) b
+         where a.id = b.customerId`)
     }
 }
 

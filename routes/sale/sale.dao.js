@@ -20,6 +20,8 @@ class SaleDao {
         salePrice INTEGER,
         totalSalePrice INTEGER,
         profit INTEGER,
+        amontReceived INTEGER,
+        balance INTEGER,
         saleDate TEXT)`;
         return this.dao.run(sql).then(
             response => {
@@ -34,11 +36,9 @@ class SaleDao {
 
     create(data) {
         console.log('SaleDao : create request , data', data);
-        const {customerId, productId, quantity, totalPurchasePrice, salePrice, profit } = data;
-        const totalSalePrice = quantity * salePrice;
-        // const {productId} = data;
-        const query = `INSERT INTO ${this.tableName} (customerId, productId, quantity, totalPurchasePrice, salePrice, totalSalePrice, profit, saleDate) VALUES (?, ?, ?, ?, ?, ?, ?, datetime() )`;
-        const values = [customerId, productId, quantity, totalPurchasePrice, salePrice, totalSalePrice, profit];
+        const {customerId, productId, quantity, totalPurchasePrice, salePrice, profit, amontReceived, totalSalePrice, balance } = data;
+        const query = `INSERT INTO ${this.tableName} (customerId, productId, quantity, totalPurchasePrice, salePrice, totalSalePrice, profit, amontReceived, balance, saleDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime() )`;
+        const values = [customerId, productId, quantity, totalPurchasePrice, salePrice, totalSalePrice, profit, amontReceived, balance];
         return this.dao.run(query, values);
     }
 

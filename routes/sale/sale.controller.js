@@ -29,10 +29,9 @@ class SaleController {
     }
 
     async create(req, res, next) {
-        console.log(' --- ',req.body);
-        const {customerId, productId, quantity, price} = req.body;
-        const saleData = {customerId, productId, quantity};
-        saleData.salePrice = price;
+        console.log('Sale Controller --- ',req.body);
+        const {customerId, productId, quantity, salePrice, totalSalePrice, amontReceived, balance} = req.body;
+        const saleData = {customerId, productId, quantity, salePrice, totalSalePrice, amontReceived, balance};
         const stockResponse = await this.getStockBasedOnProductId(productId);
         const stocks = stockResponse.data;
         console.log('SaleController.create : stocks ', stocks);
