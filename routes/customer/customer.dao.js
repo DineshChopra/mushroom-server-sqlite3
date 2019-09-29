@@ -39,7 +39,7 @@ class CustomerDao {
     getAll() {
         return this.dao.all(`select a.*, b.totalBalance from customer a left join
         (select customerId, sum(balance) as totalBalance from sale group by customerId ) b
-         where a.id = b.customerId`)
+         where a.id = b.customerId or a.id != 0`)
     }
 }
 
